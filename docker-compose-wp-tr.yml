@@ -1,0 +1,47 @@
+version: '3.7'
+
+services:
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_PASSWORD_FILE: /run/secrets/wordpress_db_password
+    secrets:
+      - wordpress_db_password
+    depends_on:
+      - db
+
+labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.odoo.rule=Host(`rp.cayman.fr`)"
+      - "traefik.http.routers.wordpress.tls=true"
+      - "traefik.http.services.wordpress-service.loadbalancer.server.port=8080"
+      - "traefik.http.middlewares.wordpress.headers.sslProxyHeaders.X-Forwarded-Proto=https"
+
+  db:
+    image: mysql:latest
+    container_name: wordpress_db
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD_FILE: /run/secrets/wordpress_db_password
+    secrets:
+      - mysql_root_password
+      - wordpress_db_password
+
+secrets:
+  mysql_root_password:
+    file: ./secrets/mysql_root_password
+  wordpress_db_password:
+    file: ./secrets/wordpress_db_password
+
+volumes:
+  db_data:
