@@ -16,6 +16,9 @@ services:
     depends_on:
       - db
 
+    networks:
+      - traefik_default
+
 labels:
       - "traefik.enable=true"
       - "traefik.http.routers.odoo.rule=Host(`rp.cayman.fr`)"
@@ -37,6 +40,9 @@ labels:
       - mysql_root_password
       - wordpress_db_password
 
+     networks:
+      - traefik_default
+
 secrets:
   mysql_root_password:
     file: ./secrets/mysql_root_password
@@ -45,3 +51,7 @@ secrets:
 
 volumes:
   db_data:
+
+networks:
+  traefik_default:
+    external: true
