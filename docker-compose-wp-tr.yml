@@ -21,7 +21,7 @@ services:
 
 labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.odoo.rule=Host(`rp.cayman.fr`)"
+      - "traefik.http.routers.wordpress.rule=Host(`rp.cayman.fr`)"
       - "traefik.http.routers.wordpress.tls=true"
       - "traefik.http.services.wordpress-service.loadbalancer.server.port=8080"
       - "traefik.http.middlewares.wordpress.headers.sslProxyHeaders.X-Forwarded-Proto=https"
