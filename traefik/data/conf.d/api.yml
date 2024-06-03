@@ -1,0 +1,13 @@
+http:
+  routers:
+    api:
+      middlewares:
+        - auth
+      service: "api@internal"
+      rule: "Host(`rp.cayman.fr`)"
+      tls: {}
+
+  middlewares:
+    auth:
+      basicAuth:
+        usersFile: /etc/traefik/auth/htpasswd 

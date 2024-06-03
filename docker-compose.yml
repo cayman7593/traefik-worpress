@@ -1,0 +1,21 @@
+version: "3.7"
+services:
+  traefik:
+    image: traefik:v2.4
+    command:
+      - "--log.level=DEBUG"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./traefik/data/traefik.toml:/traefik.toml"
+      - "./traefik/data/conf.d:/etc/traefik/conf.d:rw"
+      - "./traefik/data/certs:/etc/traefik/certs:rw"    
+      - "./traefik/data/auth:/etc/traefik/auth"    
+    restart: always
+    ports:
+      - "443:443"
+      - "80:80"
+    networks:
+      - traefik_default
+networks:
+  traefik_default:
+    external: true
